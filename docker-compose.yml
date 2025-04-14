@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  blockchain-node:
+    build:
+      context: ./blockchain-node
+      dockerfile: Dockerfile
+    ports:
+      - "8545:8545"
+    volumes:
+      - blockchain_data:/data
+    networks:
+      - phantomx_network
+
+  wallet-ui:
+    build:
+      context: ./wallet-ui
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    depends_on:
+      - blockchain-node
+      - api-gateway
+    networks:
+      - phantomx_network
+
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    ports:
+      - "4000:4000"
+    depends_on:
+      - blockchain-node
+    networks:
+      - phantomx_network
+
+  ai-core:
+    build:
+      context: ./python-ai-core
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ai_models:/models
+    networks:
+      - phantomx_network
+
+  vpn-node:
+    build:
+      context: ./phantomx-vpn/node
+      dockerfile: Dockerfile
+    ports:
+      - "51820:51820/udp"
+    cap_add:
+      - NET_ADMIN
+    volumes:
+      - vpn_config:/etc/wireguard
+    networks:
+      - phantomx_network
+
+volumes:
+  blockchain_data:
+  ai_models:
+  vpn_config:
+
+networks:
+  phantomx_network:
+    driver: bridge 

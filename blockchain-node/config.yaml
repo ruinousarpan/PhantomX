@@ -1,0 +1,42 @@
+# Network Configuration
+network_id: 1337  # PhantomX network identifier
+listen_addr: "0.0.0.0:8545"
+bootstrap_nodes:
+  - "/ip4/127.0.0.1/tcp/30301/p2p/QmBootstrapNode1"
+  - "/ip4/127.0.0.1/tcp/30302/p2p/QmBootstrapNode2"
+
+# Consensus Configuration
+consensus_type: "hybrid"  # "pos" or "hybrid"
+min_stake: 1000000000000000000  # 1 PHX in wei
+
+# Storage Configuration
+data_dir: "/data"
+
+# P2P Network Configuration
+max_peers: 50
+dial_ratio: 0.3
+handshake_timeout: 20  # seconds
+
+# Block Configuration
+block_time: 15  # seconds
+max_block_size: 5000000  # bytes
+gas_limit: 15000000
+
+# Validator Configuration
+validator_set_size: 100
+epoch_length: 100  # blocks
+reward_per_block: 2000000000000000000  # 2 PHX in wei
+
+# API Configuration
+api_enabled: true
+api_addr: "0.0.0.0:8546"
+ws_enabled: true
+ws_addr: "0.0.0.0:8547"
+
+# Metrics Configuration
+metrics_enabled: true
+metrics_addr: "0.0.0.0:9200"
+
+# Development Mode
+dev_mode: true
+log_level: "debug" 
