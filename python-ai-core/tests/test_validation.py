@@ -18,7 +18,7 @@ import base64
 import hashlib
 import uuid
 
-from core.validation import (
+from src.validation import (
     validate_user_input,
     validate_mining_data,
     validate_staking_data,
@@ -37,7 +37,7 @@ from core.validation import (
     get_validation_info
 )
 from database.models import User, ValidationRule, ValidationResult, ValidationRecord
-from database.exceptions import ValidationError as DBValidationError
+from database.exceptions import ValidationError as DBValidationError, DatabaseError, ConnectionError  # etc.
 
 @pytest.fixture
 def test_user(db_session):

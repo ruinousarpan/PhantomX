@@ -4,6 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "python-ai-core"
+version = "0.1.0"
 description = "Core AI and Data Management System"
 readme = "README.md"
 requires-python = ">=3.9"
@@ -85,9 +86,9 @@ warn_unreachable = true
 
 [tool.pytest.ini_options]
 minversion = "7.0"
-addopts = "-ra -q --cov=python-ai-core --cov-report=term-missing"
+addopts = "-ra -q"
 testpaths = [
-    "python-ai-core/tests",
+    "tests",
 ]
 python_files = ["test_*.py"]
 python_classes = ["Test*"]
