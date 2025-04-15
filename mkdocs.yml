@@ -1,0 +1,90 @@
+site_name: Python AI Core
+site_description: Documentation for the Python AI Core project
+site_author: Ruinous Arpan
+site_url: https://ruinousarpan.github.io/PhantomX/
+
+# Repository
+repo_name: ruinousarpan/PhantomX
+repo_url: https://github.com/ruinousarpan/PhantomX
+edit_uri: edit/main/docs/
+
+# Copyright
+copyright: Copyright &copy; 2023 - 2024
+
+# Configuration
+theme:
+  name: material
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - search.highlight
+    - search.suggest
+    - content.tabs.link
+    - content.code.copy
+
+# Extensions
+markdown_extensions:
+  - admonition
+  - codehilite
+  - footnotes
+  - meta
+  - toc:
+      permalink: true
+  - pymdownx.arithmatex
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.critic
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:materialx.emoji.twemoji
+      emoji_generator: !!python/name:materialx.emoji.to_svg
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences
+  - pymdownx.tabbed
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+
+# Navigation
+nav:
+  - Home: index.md
+  - API:
+    - Overview: api/index.md
+    - Endpoints: api/endpoints.md
+  - Development:
+    - Setup: development/setup.md
+    - Contributing: development/contributing.md
+    - Testing: development/testing.md
+  - About:
+    - License: about/license.md
+    - Changelog: about/changelog.md
+
+plugins:
+  - search
+  - mkdocstrings:
+      handlers:
+        python:
+          paths: [python-ai-core]
+          options:
+            docstring_style: google
+            show_source: true 

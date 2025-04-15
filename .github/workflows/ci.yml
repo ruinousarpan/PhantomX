@@ -107,8 +107,40 @@ jobs:
       run: |
         pip-audit
 
+  api-documentation:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+    
+    - name: Find API files
+      run: |
+        python scripts/find_api_files.py
+    
+    - name: Validate API documentation
+      run: |
+        python scripts/validate_api_docs.py
+    
+    - name: Generate API documentation
+      run: |
+        python scripts/generate_api_docs.py
+    
+    - name: Check for documentation changes
+      run: |
+        git add docs/api/
+        git diff --staged --quiet || echo "API documentation has been updated"
+
   build:
-    needs: [test, security, dependency-check]
+    needs: [test, security, dependency-check, api-documentation]
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     
@@ -131,4 +163,23 @@ jobs:
     
     - name: Check package
       run: |
-        twine check dist/* 
+        twine check dist/*
+
+  docs-validation:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    - name: Install documentation dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install mkdocs-material requests
+    - name: Generate API documentation
+      run: ./scripts/generate_api_docs.py
+    - name: Check documentation links
+      run: ./scripts/check_docs.py
+    - name: Build documentation
+      run: mkdocs build 
