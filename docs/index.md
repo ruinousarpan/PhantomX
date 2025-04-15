@@ -58,3 +58,19 @@ To get started with Python AI Core, follow these steps:
 ## Support
 
 For support, please open an issue on our [GitHub repository](https://github.com/ruinousarpan/PhantomX/issues). 
+
+from src.processing.factory import ProcessorFactory
+
+pipeline = ProcessorFactory.create_data_pipeline([
+    ProcessorFactory.create_missing_value_processor(strategy="fill", fill_value=0),
+    ProcessorFactory.create_outlier_processor(method="zscore", columns=["age"]),
+    ProcessorFactory.create_scaling_processor(method="minmax", columns=["income"]),
+    ProcessorFactory.create_encoding_processor(method="onehot", columns=["education"])
+])
+
+result = pipeline.process(df)
+if result.success:
+    processed_df = result.data 
+
+processor = ProcessorFactory.create_missing_value_processor(strategy="fill", fill_value=0)
+result = processor.process(df) 
