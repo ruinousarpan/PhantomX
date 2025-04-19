@@ -7,6 +7,9 @@ import (
 	"os/signal"
 	"syscall"
 
+	"github.com/ruinousarpan/PhantomX/consensus"
+	"github.com/ruinousarpan/PhantomX/core"
+
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
 	"go.uber.org/zap"
@@ -100,9 +103,9 @@ type Node struct {
 	config *Config
 	logger *zap.Logger
 
-	// Core components will be added here
-	// blockchain *Blockchain
-	// consensus  Consensus
+	// Core components
+	blockchain *core.Blockchain
+	consensus  *consensus.Consensus
 	// p2p       *P2P
 	// api       *API
 }
@@ -125,18 +128,47 @@ func NewNode(ctx context.Context, cfg *Config) (*Node, error) {
 
 // initComponents initializes all node components
 func (n *Node) initComponents() error {
-	// TODO: Initialize blockchain, consensus, p2p, and API components
+	// Initialize blockchain
+	blockchain, err := core.NewBlockchain(n.config.DataDir)
+	if err != nil {
+		return fmt.Errorf("failed to initialize blockchain: %w", err)
+	}
+	n.blockchain = blockchain
+
+	// Initialize consensus
+	n.consensus = consensus.NewConsensus(
+		consensus.ConsensusType(n.config.ConsensusType),
+		n.config.MinStake,
+		n.logger,
+	)
+
+	// TODO: Initialize P2P and API components
+
 	return nil
 }
 
 // Start starts the node and all its components
 func (n *Node) Start() error {
-	// TODO: Start all components
+	// Start blockchain
+	if err := n.blockchain.Start(); err != nil {
+		return fmt.Errorf("failed to start blockchain: %w", err)
+	}
+
+	// TODO: Start P2P and API components
+
+	n.logger.Info("Node started successfully")
 	return nil
 }
 
 // Stop stops the node and all its components
 func (n *Node) Stop() error {
-	// TODO: Stop all components
+	// Stop blockchain
+	if err := n.blockchain.Stop(); err != nil {
+		n.logger.Error("Failed to stop blockchain", zap.Error(err))
+	}
+
+	// TODO: Stop P2P and API components
+
+	n.logger.Info("Node stopped successfully")
 	return nil
 }

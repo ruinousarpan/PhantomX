@@ -1,16 +1,15 @@
 # Network Configuration
-network_id: 1337  # PhantomX network identifier
-listen_addr: "0.0.0.0:8545"
+network_id: 1
+listen_addr: "/ip4/0.0.0.0/tcp/30303"
 bootstrap_nodes:
-  - "/ip4/127.0.0.1/tcp/30301/p2p/QmBootstrapNode1"
-  - "/ip4/127.0.0.1/tcp/30302/p2p/QmBootstrapNode2"
+  - "/ip4/127.0.0.1/tcp/30303/p2p/QmNnooDu7bfjPFoTZYxMNLWUQJyrVwtbZg5gBMjTezGAJN"
 
 # Consensus Configuration
 consensus_type: "hybrid"  # "pos" or "hybrid"
-min_stake: 1000000000000000000  # 1 PHX in wei
+min_stake: 1000  # Minimum stake required to become a validator
 
 # Storage Configuration
-data_dir: "/data"
+data_dir: "./data"
 
 # P2P Network Configuration
 max_peers: 50

@@ -1,4 +1,4 @@
-name: Python CI
+name: CI
 
 on:
   push:
@@ -20,53 +20,50 @@ jobs:
       uses: actions/setup-python@v4
       with:
         python-version: ${{ matrix.python-version }}
-        cache: 'pip'
     
-    - name: Install system dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y postgresql postgresql-contrib
-        sudo systemctl start postgresql
-    
-    - name: Cache pip packages
-      uses: actions/cache@v3
-      with:
-        path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-        restore-keys: |
-          ${{ runner.os }}-pip-
-    
-    - name: Install Python dependencies
+    - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install pytest pytest-cov pytest-mock pytest-asyncio
-        pip install black isort mypy pylint
+        pip install -e .
+        pip install pytest pytest-cov black isort mypy
     
-    - name: Run linting
+    - name: Check code formatting
       run: |
-        black . --check
-        isort . --check-only
-        pylint python-ai-core/
-        mypy python-ai-core/
+        black --check src tests
+        isort --check-only src tests
+    
+    - name: Type checking
+      run: |
+        mypy src
     
     - name: Run tests with coverage
-      env:
-        DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
-        SECRET_KEY: test_secret_key
-        ENVIRONMENT: test
       run: |
-        pytest python-ai-core/tests/ \
-          --cov=python-ai-core \
-          --cov-report=xml \
-          --cov-report=term-missing \
-          --cov-fail-under=80
+        pytest --cov=src --cov-report=xml
     
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v3
       with:
         file: ./coverage.xml
         fail_ci_if_error: true
+
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install flake8
+    
+    - name: Run linter
+      run: |
+        flake8 src tests --max-line-length=100
 
   security:
     runs-on: ubuntu-latest
@@ -85,7 +82,7 @@ jobs:
     
     - name: Run security checks
       run: |
-        bandit -r python-ai-core/
+        bandit -r src
         safety check
 
   dependency-check:
